@@ -24,5 +24,9 @@ rpds-py
 sqlparse
 typing_extensions
 uritemplate
+pytest
+pytest-django
+pytest-html
+pytest-cov
 
 

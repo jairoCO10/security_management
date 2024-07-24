@@ -94,3 +94,27 @@ Si realizas cambios en el código, asegúrate de reconstruir los contenedores co
 
  ```
 
+# Test en html
+ ```shell
+pytest --html=report.html --self-contained-html   
+
+ ```
+![Texto alternativo](/img/report.png)
+
+
+ 
+# Test Coverage
+ ```shell
+pytest --cov=security_management --cov-report=html  
+ ```
+ ![Texto alternativo](/img/coverage.png)
+
+
+# Insertar los registros a al db
+ ```shell
+python manage.py shell < run.py
+ ```
+ Este escript es el encargado de carga la db con toda la informacion (https://nvd.nist.gov/developers/vulnerabilities).
+
+ ![Texto alternativo](/img/django.png)
+ 

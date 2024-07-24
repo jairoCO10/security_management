@@ -1,0 +1,123 @@
+2024-07-24 20:38:08,885 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-2000-0564
+
+2024-07-24 20:44:30,102 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 20:44:30,105 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 20:45:00,316 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 20:45:00,318 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 20:46:06,381 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 20:46:06,383 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 20:47:18,362 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 20:47:18,365 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 20:49:07,119 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 20:49:07,122 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 20:57:33,534 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 20:57:33,538 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:01:37,637 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:01:37,641 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:04:48,774 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:04:48,778 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:05:19,405 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:05:19,410 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:05:58,223 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:05:58,227 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:07:02,520 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:07:02,523 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:07:48,429 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:07:48,432 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:13:11,966 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:13:11,969 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:13:39,436 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:13:39,439 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:14:04,108 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:14:04,111 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:14:31,552 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:14:31,555 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:27:30,899 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:27:30,904 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:30:32,990 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:30:32,996 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:30:56,718 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:30:56,722 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:32:52,717 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:32:52,725 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:34:43,364 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:34:43,371 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:35:43,116 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:35:43,121 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:38:50,363 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:38:50,369 [INFO] - Solicitud a la ruta /get_all_fixed.
+
+2024-07-24 21:51:30,888 [INFO] - Solicitud a la ruta /create_fixed.
+Data enviada: CVE-1234-5678
+
+2024-07-24 21:51:30,898 [INFO] - Solicitud a la ruta /get_all_fixed.
+

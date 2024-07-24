@@ -1,0 +1,15 @@
+Django
+djangorestframework
+djangorestframework-simplejwt
+requests
+psycopg2-binary
+env
+pydantic
+pytz
+passlib
+bcrypt
+cryptography
+python-jose
+python-dotenv
+
+

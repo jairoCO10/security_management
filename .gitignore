@@ -1,0 +1,9 @@
+data/
+postgres_data/
+env/
+migrations/
+.pg_service.conf
+.my_pgpass
+*.pyc
+.env
+db.sqlite3

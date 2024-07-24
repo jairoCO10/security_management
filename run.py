@@ -1,5 +1,6 @@
 import requests
 from django.utils.dateparse import parse_datetime
+from django.utils.timezone import make_aware
 from vulnerabilities.models import Vulnerability
 
 def fetch_and_save_vulnerabilities():
@@ -22,18 +23,38 @@ def fetch_and_save_vulnerabilities():
         description_es = next((desc['value'] for desc in descriptions if desc['lang'] == 'es'), '')
 
         # Extraer datos con un manejo de excepciones
-        severity = metrics.get('baseSeverity', 'UNKNOWN')
+        # print("baseSeverity",metrics.get('baseSeverity'))
+        
+        baseseveritys = cve.get('metrics', {}).get('cvssMetricV2', [])
+         
+        if baseseveritys:
+            for baseSeverity in baseseveritys:
+                severity = baseSeverity["baseSeverity"]
+                exploitability_score = baseSeverity["exploitabilityScore"]
+                impact_score = baseSeverity["impactScore"]
+        else:
+            severity = 'UNKNOWN'
+            exploitability_score = 0
+            impact_score = 0
+
         base_score = metrics.get('baseScore', 0)
-        exploitability_score = metrics.get('exploitabilityScore', 0)
-        impact_score = metrics.get('impactScore', 0)
+        
 
         try:
+            published_date = parse_datetime(cve.get('published', ''))
+            last_modified_date = parse_datetime(cve.get('lastModified', ''))
+
+            if published_date:
+                published_date = make_aware(published_date)
+            if last_modified_date:
+                last_modified_date = make_aware(last_modified_date)
+
             Vulnerability.objects.update_or_create(
                 cve_id=cve.get('id', ''),
                 defaults={
                     'source_identifier': cve.get('sourceIdentifier', ''),
-                    'published': parse_datetime(cve.get('published', '')),
-                    'last_modified': parse_datetime(cve.get('lastModified', '')),
+                    'published': published_date,
+                    'last_modified': last_modified_date,
                     'vuln_status': cve.get('vulnStatus', ''),
                     'description_en': description_en,
                     'description_es': description_es,

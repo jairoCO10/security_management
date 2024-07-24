@@ -14,3 +14,8 @@ class VulnerabilityDataClassSerializer(serializers.Serializer):
     exploitability_score = serializers.FloatField()
     impact_score = serializers.FloatField()
     created_at = serializers.DateTimeField()
+
+class CountVulnerabilityDataClassSerializer(serializers.Serializer):
+    severity = serializers.CharField()
+    count = serializers.IntegerField()
+

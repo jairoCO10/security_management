@@ -4,11 +4,14 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from django.http import Http404
 
+from django.db.models import Count
+
 from rest_framework.decorators import api_view
 from vulnerabilities.interface_adapters.controller.VulnerabilityControl  import ControlVulnerability
-from vulnerabilities.serializers.serializers import VulnerabilityDataClassSerializer
+from vulnerabilities.serializers.serializers import VulnerabilityDataClassSerializer, CountVulnerabilityDataClassSerializer
 
 
+notfound= "No vulnerabilities found."
 
 @api_view(['POST'])
 async def create_vulnerability(request):
@@ -28,6 +31,29 @@ def get_all(request):
         serializer = VulnerabilityDataClassSerializer(vulnerabilities, many=True)
         return Response(serializer.data)
     except Http404:
-        raise NotFound("No vulnerabilities found.")
+        raise NotFound(notfound)
 
+@api_view(['GET'])
+def get_queryset(request):
+    control = ControlVulnerability()
+    try:
+
+        vulnerabilities = control.get_queryset()
+
+        # Serializa los datos usando el serializador para dataclasses
+        serializer = VulnerabilityDataClassSerializer(vulnerabilities, many=True)
+        return Response(serializer.data)
+    except Http404:
+        raise NotFound(notfound)
+    
+
+@api_view(['GET'])
+def vulnerability_severity_summary(request):
+    control = ControlVulnerability()
+    try:
+        vulnerabilities = control.get_count_vulnerability()
+        serializer = CountVulnerabilityDataClassSerializer(vulnerabilities, many=True)
+        return Response(serializer.data)
+    except Http404:
+        raise NotFound(notfound)
 

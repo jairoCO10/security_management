@@ -7,3 +7,4 @@ migrations/
 *.pyc
 .env
 db.sqlite3
+.vscode/

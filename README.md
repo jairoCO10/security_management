@@ -117,4 +117,10 @@ python manage.py shell < run.py
  Este escript es el encargado de carga la db con toda la informacion (https://nvd.nist.gov/developers/vulnerabilities).
 
  ![Texto alternativo](/img/django.png)
+
+
+
+# Documentacion 
+
+[documentacion de la endpoint](http://localhost:8000/redoc/)
  

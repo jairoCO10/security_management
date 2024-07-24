@@ -8,6 +8,11 @@ from vulnerabilities.serializers.serializers import VulnerabilityDataClassSerial
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi 
+from vulnerabilities.interface_adapters.dependencies import openapidoc
+from rest_framework import status
+
 # Configuración del logger
 log_formatter = logging.Formatter('%(asctime)s [%(levelname)s] - %(message)s')
 log_handler = TimedRotatingFileHandler(
@@ -23,13 +28,19 @@ logger.addHandler(log_handler)
 
 notfound_message = "No vulnerabilities found."
 
-@api_view(['POST'])
-def create_vulnerability(request):
-    control = ControlVulnerability()
-    item = request.data  # Cambiado a request.data para obtener datos del cuerpo de la solicitud
-    logger.info(f"Solicitud a la ruta /create_vulnerability.\nData enviada: {item}\n")
-    return control.agg_vulnerability(item.get('cve', {}))
 
+@swagger_auto_schema(
+    method='get',
+    responses={
+        200: openapi.Response(
+            description="Lista de vulnerabilidades",
+            examples={ 
+                "application/json":  openapidoc.vulnerability_responses
+            }
+        ),
+        status.HTTP_404_NOT_FOUND: notfound_message
+    }
+)
 @api_view(['GET'])
 def get_all(request):
     control = ControlVulnerability()
@@ -42,6 +53,20 @@ def get_all(request):
         logger.error(notfound_message)
         raise NotFound(notfound_message)
 
+
+@swagger_auto_schema(
+    method='get',
+    description="Lista de vulnerabilidades que excluyen las fijadas",
+    responses={
+        200: openapi.Response(
+            description="Lista de vulnerabilidades que excluyen las fijadas",
+            examples={ 
+                "application/json":  openapidoc.vulnerability_excluding_fixed
+            }
+        ),
+        status.HTTP_404_NOT_FOUND: notfound_message
+    }
+)
 @api_view(['GET'])
 def get_queryset(request):
     control = ControlVulnerability()
@@ -53,6 +78,22 @@ def get_queryset(request):
     except Http404:
         logger.error(notfound_message)
         raise NotFound(notfound_message)
+
+
+
+@swagger_auto_schema(
+    method='get',
+    responses={
+        200: openapi.Response(
+            description="Lista de vulnerability severity summary",
+            examples={ 
+                "application/json":  openapidoc.vulnerabilities_summary
+            }
+        ),
+        status.HTTP_404_NOT_FOUND: notfound_message
+    }
+)
+
 
 @api_view(['GET'])
 def vulnerability_severity_summary(request):

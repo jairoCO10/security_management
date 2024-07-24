@@ -24,9 +24,11 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Security Management",
         default_version='v1',
-        description="Descripción de tu API",
+        description=("""Este proyecto implementa un sistema para la gestión de vulnerabilidades, a
+        plicando principios de Clean Code, SOLID y arquitectura hexagonal. La aplicación está 
+        desarrollada con Django y se ejecuta en un entorno Docker que incluye pgAdmin y PostgreSQL."""),
     ),
-    public=False,
+    public=True,
 )
 
 

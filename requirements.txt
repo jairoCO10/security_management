@@ -11,5 +11,18 @@ bcrypt
 cryptography
 python-jose
 python-dotenv
+drf-spectacular
+drf-yasg
+inflection
+jsonschema
+jsonschema-specifications
+packaging
+PyJWT
+PyYAML
+referencing
+rpds-py
+sqlparse
+typing_extensions
+uritemplate
 
 

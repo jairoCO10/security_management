@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'vulnerabilities',
+    'fixedVulnerability',
     'rest_framework',
+    'drf_yasg',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -81,18 +84,26 @@ WSGI_APPLICATION = 'security_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if os.getenv("DEPLOY") == "DEV":
+print(os.getenv("DEPLOY"))
 
+if os.getenv("DEPLOY") == "DEV":
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("POSTGRES_DB"),  # El nombre de la base de datos
-            "USER": os.getenv("POSTGRES_USER"),  # Tu usuario de base de datos
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD"),  # La contraseña del usuario
-            "HOST": "postgres",   # O la IP o nombre del contenedor de la base de datos
-            "PORT": "5432",        # El puerto por el que PostgreSQL está escuchando
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+    # DATABASES = {
+    #     "default": {
+    #         "ENGINE": "django.db.backends.postgresql",
+    #         "NAME": os.getenv("POSTGRES_DB"),  # El nombre de la base de datos
+    #         "USER": os.getenv("POSTGRES_USER"),  # Tu usuario de base de datos
+    #         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),  # La contraseña del usuario
+    #         "HOST": "postgres",   # O la IP o nombre del contenedor de la base de datos
+    #         "PORT": "5432",        # El puerto por el que PostgreSQL está escuchando
+    #     }
+    # }
 elif os.getenv("DEPLOY") == "PROD":
     DATABASES = {
         "default": {
@@ -105,13 +116,8 @@ elif os.getenv("DEPLOY") == "PROD":
         }
     }
 
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+# else:
+    
 
 
 

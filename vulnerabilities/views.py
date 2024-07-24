@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 # Create your views here.
+from rest_framework.exceptions import NotFound
+from django.http import Http404
 
 from rest_framework.decorators import api_view
 from vulnerabilities.interface_adapters.controller.VulnerabilityControl  import ControlVulnerability
@@ -18,10 +20,14 @@ async def create_vulnerability(request):
 @api_view(['GET'])
 def get_all(request):
     control = ControlVulnerability()
-    vulnerabilities = control.get_all_vulnerability()
+    try:
 
-    # Serializa los datos usando el serializador para dataclasses
-    serializer = VulnerabilityDataClassSerializer(vulnerabilities, many=True)
-    return Response(serializer.data)
+        vulnerabilities = control.get_all_vulnerability()
+
+        # Serializa los datos usando el serializador para dataclasses
+        serializer = VulnerabilityDataClassSerializer(vulnerabilities, many=True)
+        return Response(serializer.data)
+    except Http404:
+        raise NotFound("No vulnerabilities found.")
 
 

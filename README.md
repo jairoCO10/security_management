@@ -322,7 +322,46 @@ La autenticación y autorización se puede implementar utilizando JWT (JSON Web 
        'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
    }
    ```
+3.  Implementación de los endpoints
 
+  ```python
+
+  from rest_framework_simplejwt.views import (TokenObtainPairView,TokenRefreshView,)
+
+  urlpatterns = [
+      path('admin/', admin.site.urls),
+      path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+      path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+      ...
+  ]
+   ```
+4. Prueba de servicio
+```bash
+curl --location 'http://localhost:8010/api/token/' \
+--header 'Content-Type: application/json' \
+--data '{
+    "username": "user",
+    "password": "test"
+}'
+```
+```json
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyMTk2NDAyNSwiaWF0IjoxNzIxODc3NjI1LCJqdGkiOiI5OGExN2I3NWFkNjM0YzM0YWU5NDc1ZTkzNDk5YjhmMSIsInVzZXJfaWQiOjF9.fuY9mZ9hlsAO-MA2vQ0qB6ZFqUTVY4b37jiCgx8GSVU",
+    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxODc3OTI1LCJpYXQiOjE3MjE4Nzc2MjUsImp0aSI6IjllZTgwZjYwNzVkZjRiZDI4YTBlZDU2YTdhMTNiMDE2IiwidXNlcl9pZCI6MX0.xGQMqf61XtdZ-JA_ljw3hhZlDKhCN7FjO6WcHSqVSuM"
+}
+```
+5. Prueba de un endpont con el token
+```bash
+curl --location 'http://localhost:8010/api/vulnerabilities/excluding-fixed/' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxODc3OTI1LCJpYXQiOjE3MjE4Nzc2MjUsImp0aSI6IjllZTgwZjYwNzVkZjRiZDI4YTBlZDU2YTdhMTNiMDE2IiwidXNlcl9pZCI6MX0.xGQMqf61XtdZ-JA_ljw3hhZlDKhCN7FjO6WcHSqVSuM'
+```
+### Nota:
+Si el token no se proporciona la respuesta sera la siguiente
+```json
+{
+    "detail": "Authentication credentials were not provided."
+}
+```
 ## Despliegue
 
 ### Desplegar en Producción

@@ -11,6 +11,8 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi 
 from vulnerabilities.interface_adapters.dependencies import openapidoc
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 
 import logging
 from logging.handlers import TimedRotatingFileHandler
@@ -44,6 +46,7 @@ notfound_message = "No vulnerabilities found."
     }
 )
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_all(request):
     control = ControlVulnerability()
     try:
@@ -70,6 +73,7 @@ def get_all(request):
     }
 )
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_queryset(request):
     control = ControlVulnerability()
     try:
@@ -98,6 +102,7 @@ def get_queryset(request):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def vulnerability_severity_summary(request):
     control = ControlVulnerability()
     try:

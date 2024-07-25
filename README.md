@@ -1,126 +1,393 @@
-# Proyecto de Gestión de Vulnerabilidades
 
-Este proyecto implementa un sistema para la gestión de vulnerabilidades, aplicando principios de Clean Code, SOLID y arquitectura hexagonal. La aplicación está desarrollada con Django y se ejecuta en un entorno Docker que incluye pgAdmin y PostgreSQL.
+# Gestión de Seguridad en Infraestructura
 
-## Requisitos
+## Descripción General del Proyecto
 
-Asegúrate de tener Docker y Docker Compose instalados en tu máquina. Puedes verificarlo con los siguientes comandos:
+Este proyecto es una API REST desarrollada con Django REST Framework para gestionar la seguridad de los sistemas desplegados en la infraestructura Cloud mediante el cruce de información con los CVEs del NIST. La aplicación permite:
 
-```sh
-docker --version && docker-compose --version
+1. Obtener un listado de todas las vulnerabilidades del NIST.
+2. Indicar qué vulnerabilidades ya se han corregido en la infraestructura.
+3. Obtener un listado de vulnerabilidades excluyendo las que ya se han corregido.
+4. Obtener información resumida de vulnerabilidades por severidad.
+
+## Requisitos del Sistema
+
+- Python 3.9+
+- Django 4.2.14
+- Django REST Framework
+- PostgreSQL
+- Docker & Docker Compose
+
+## Instalación y Configuración
+
+### Clonar el Repositorio
+
+```bash
+git clone https://github.com/jairoCO10/security_management.git
+cd security_management
 ```
 
+### Configuración del Entorno
+
+Crear y activar un entorno virtual (opcional pero recomendado):
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+```
+
+Instalar las dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+### Archivo .env
+
+```Properties
+
+# POSTGRES
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+PGADMIN_DEFAULT_EMAIL=admin@example.com
+PGADMIN_DEFAULT_PASSWORD=
+PORTPG=5050:80
+
+SECRET_KEY =''
+
+
+ENVIROMEN= DEBUG
+
+DEBUG=False
+
+DEPLOY = DEV
+```
+
+### Configuración de la Base de Datos
+
+Crear y configurar la base de datos PostgreSQL. Asegúrate de que tu configuración de base de datos en `settings.py` se vea algo así:
+
+```python
+DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB"), 
+            "USER": os.getenv("POSTGRES_USER"), 
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD"), 
+            "HOST": "postgres", # O la IP o nombre del contenedor de la base de datos
+            "PORT": "5432", 
+        }
+    }
+```
+
+### Migraciones de la Base de Datos
+
+```bash
+python manage.py migrate
+```
+### Configuracion de archivo  `run.py`
+ run.py es un script de python el cual es el encargado de cargar todas las vulnerabilidades a la db
+
+![Diagrama de la Solución](img/code.png)
+
+
+### Cargar Datos Iniciales
+
+```bash
+python manage.py shell < run.py
+```
+
+## Guía de Uso
+
+### Iniciar la Aplicación
+
+```bash
+python manage.py runserver
+```
+
+### Endpoints de la API
+
+1. **Listar Vulnerabilidades**
+
+   - **URL**: `/api/vulnerabilities/`
+   - **Método**: `GET`
+   - **Descripción**: Devuelve el listado total de las vulnerabilidades.
+   - **Ejemplo de Solicitud**:
+     ```bash
+     curl -X GET http://localhost:8000/api/vulnerabilities/
+     ```
+
+2. **Registrar Vulnerabilidades Corregidas**
+
+   - **URL**: `/api/fixed-vulnerabilities/`
+   - **Método**: `POST`
+   - **Descripción**: Recibe las vulnerabilidades corregidas.
+   - **Ejemplo de Solicitud**:
+     ```bash
+     curl -X POST http://localhost:8000/api/fixeds/ -d '{"cve_id": "CVE-2000-0564"}'
+     ```
+
+3. **Listar Vulnerabilidades Excluyendo las Corregidas**
+
+   - **URL**: `/api/vulnerabilities/excluding-fixed/`
+   - **Método**: `GET`
+   - **Descripción**: Devuelve el listado de vulnerabilidades excluyendo las corregidas.
+   - **Ejemplo de Solicitud**:
+     ```bash
+     curl -X GET http://localhost:8000/api/vulnerabilities/excluding-fixed/
+     ```
+
+4. **Resumen de Vulnerabilidades por Severidad**
+
+   - **URL**: `/api/vulnerabilities/summary/`
+   - **Método**: `GET`
+   - **Descripción**: Devuelve un resumen de vulnerabilidades por severidad.
+   - **Ejemplo de Solicitud**:
+     ```bash
+     curl -X GET http://localhost:8000/api/vulnerabilities/summary/
+     ```
+
+## Testing
+
+### Ejecutar Pruebas
+
+Las pruebas se han implementado utilizando `pytest`. Para ejecutarlas, usa el siguiente comando:
+
+```bash
+pytest --html=report.html --self-contained-html
+```
+![Diagrama de la Solución](img/report.png)
+
+### Test Coverage
+
+```bash
+pytest --html=report.html --self-contained-html
+```
+![Diagrama de la Solución](img/coverage.png)
+
+
+
+## Dockerización
+
+### Construir y Ejecutar el Contenedor
+
+Asegúrate de tener Docker y Docker Compose instalados. Luego, sigue estos pasos:
+   ```bash
+   docker --version && docker-compose --version
+   ```
+
+
+1. Ejecutar los contenedores:
+
+   ```bash
+   docker-compose up --build -d
+   ```
+
+2. :
+
+   ```bash
+   docker logs <CONTAINER ID>
+   ```
+
+### Archivo `docker-compose.yml`
+
+```yaml
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - ${PORTPG}
+    depends_on:
+      - postgres
+
+  security_management:
+    build: .
+    ports:
+      - "8010:8000"
+    depends_on:
+      - postgres
+
+```
 
 ## Estructura del Proyecto
-* Django: El framework principal para construir la API.
-* pgAdmin: Herramienta de administración para PostgreSQL.
-* PostgreSQL: Base de datos utilizada para almacenar la información.
 
-# Configuración
+La aplicación sigue la arquitectura hexagonal y los principios SOLID. La estructura del proyecto es la siguiente:
 
-
-1. Variables de Entorno
-```sh
-POSTGRES_DB=test
-POSTGRES_USER=root
-POSTGRES_PASSWORD=test
-PGADMIN_DEFAULT_EMAIL=admin@example.com
-PGADMIN_DEFAULT_PASSWORD=test
-PORTPG=5050:80
 ```
-Crea un archivo .env en la raíz del proyecto con las siguientes variables:
+/security_management
+│
+├── manage.py
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── .env
+│
+├── /security_management
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   ├── asgi.py
+│   │
+├── /vulneravility
+│   ├── __init__.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── models.py
+│   ├── admin.py
+│   ├── apps.py
+│   └── tests.py
+│   ├──/entities
+│   │   └── VulnerabilityEntities.py
+│   ├──/interface_adapters
+│   │   ├──/controller
+│   │   │   └── VulnerabilityControl.py
+│   │   ├──/dependencies
+│   │   │   └── openapidoc.py
+│   │   ├──/gateways
+│   │   │   └── VulnerabilityGateways.py
+│   ├──/repository
+│   │   └── VulnerabilityRepository.py
+│   ├──/serializers
+│   │   └── serializers.py
+│   ├──/usecases
+│   │   └── VulnerabilityCases.py
+├── /fixedVulnerability
+│   ├── __init__.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── models.py
+│   ├── admin.py
+│   ├── apps.py
+│   └── tests.py
+│   ├──/entities
+│   │   └── FixedEntities.py
+│   ├──/interface_adapters
+│   │   ├──/controller
+│   │   │   └── FixedControl.py
+│   │   ├──/dependencies
+│   │   │   └── openapidoc.py
+│   │   ├──/gateways
+│   │   │   └── FixedGateways.py
+│   ├──/repository
+│   │   └── FixedRepository.py
+│   ├──/serializers
+│   │   └── serializers.py
+│   ├──/usecases
+│   │   └── FixedCases.py
+```
+
+## Autenticación y Autorización
+
+### Implementación
+
+La autenticación y autorización se puede implementar utilizando JWT (JSON Web Tokens) con Django REST Framework. Para detalles sobre cómo configurar esto, consulta la [documentación de Django REST Framework Simple JWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/).
+
+### Ejemplo de Configuración
+
+1. Instalar `djangorestframework-simplejwt`:
+
+   ```bash
+   pip install djangorestframework-simplejwt
+   ```
+
+2. Añadir la configuración en `settings.py`:
+
+   ```python
+   REST_FRAMEWORK = {
+       'DEFAULT_AUTHENTICATION_CLASSES': (
+           'rest_framework_simplejwt.authentication.JWTAuthentication',
+       ),
+   }
+
+   SIMPLE_JWT = {
+       'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+       'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+   }
+   ```
+
+## Despliegue
+
+### Desplegar en Producción
+
+Para desplegar la aplicación en un entorno de producción, sigue estos pasos:
+
+1. Configurar un servidor con Docker.
+2. Configurar la base de datos PostgreSQL en el servidor.
+3. Construir y ejecutar el contenedor Docker en el servidor.
 
 
-## Ejecución
-1. Para iniciar la aplicación, sigue estos pasos:
+## Logs y Auditoría
 
-    * Construir y levantar los contenedores
+### Implementación
 
-    * Ejecuta el siguiente comando en la raíz del proyecto:
+Los logs y auditoría se pueden implementar utilizando el módulo `logging` de Python.
 
-    ```shell
-    docker-compose up --build -d
-    ```
-    Esto construirá los contenedores y los levantará. La aplicación Django estará 
-    disponible en http://localhost:8010.
+### Ejemplo de Configuración
 
-2. Aplicar Migraciones
+```python
+import logging
+from logging.handlers import TimedRotatingFileHandler
 
-    Una vez que los contenedores estén en ejecución, aplica las migraciones de Django:
+# Configuración del logger
+log_formatter = logging.Formatter('%(asctime)s [%(levelname)s] - %(message)s')
+log_handler = TimedRotatingFileHandler(
+    filename='logs/vulnerability/vulnerability.log',
+    when='D',
+    interval=1,
+)
+log_handler.setFormatter(log_formatter)
 
-    ```shell
-    docker-compose exec security_management python manage.py migrate
-    ```
-3. Acceder a pgAdmin
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+logger.addHandler(log_handler)
 
-    Abre tu navegador y accede a pgAdmin en http://localhost:5050. Usa las credenciales 
-    definidas en el archivo .env para iniciar sesión.
-
-
-
-# Implementación
-
-## Clean Code
-
-El proyecto sigue los principios de Clean Code para asegurar un código claro y mantenible.
-
-## Principios SOLID
-
-* S: Responsabilidad Única
-* O: Abierto/Cerrado
-* L: Sustitución de Liskov
-* I: Segregación de Interfaces
-* D: inyección de Dependencias
-
-## Arquitectura Hexagonal
-La aplicación está diseñada siguiendo el patrón de arquitectura hexagonal, lo que facilita la separación de las distintas capas y permite una mejor gestión de las dependencias y la integración de componentes.
+@api_view(['GET'])
+def get_all(request):
+    control = ControlVulnerability()
+    try:
+        vulnerabilities = control.get_all_vulnerability()
+        serializer = VulnerabilityDataClassSerializer(vulnerabilities, many=True)
+        logger.info("Solicitud a la ruta /vulnerabilities.\n")
+        return Response(serializer.data)
+    except Http404:
+        logger.error(notfound_message)
+        raise NotFound(notfound_message)
+        
+```
+# Documentacion de endpoint
+para esta api se creo por medio de django-yrf una documentacion la cual puede ser consultada en el siguiente enlace, esta contiene la estrutura que se usa en los distintos endpoints
+[enlace](http://localhost:8010/redoc)
 
 
-# Uso de la API
-Crear una Vulnerabilidad
+## Contribución
 
-Endpoint: POST /api/vulnerabilities/
-Request Body: Debe incluir los detalles de la vulnerabilidad.
-Obtener Todas las Vulnerabilidades
+Para contribuir a este proyecto, sigue estos pasos:
 
-Endpoint: GET /api/vulnerabilities/
+1. Haz un fork del repositorio.
+2. Crea una rama (`git checkout -b feature/NombreDeTuRama`).
+3. Realiza tus cambios y commitea (`git commit -am 'Añade alguna funcionalidad'`).
+4. Sube tus cambios a tu fork (`git push origin feature/NombreDeTuRama`).
+5. Crea un nuevo Pull Request.
 
-## Notas Adicionales
-Si realizas cambios en el código, asegúrate de reconstruir los contenedores con:
- ```shell
- docker-compose up --build
+## Licencia
 
- docker-compose exec security_management python manage.py migrate
-
- ```
-
-# Test en html
- ```shell
-pytest --html=report.html --self-contained-html   
-
- ```
-![Texto alternativo](/img/report.png)
-
-
- 
-# Test Coverage
- ```shell
-pytest --cov=security_management --cov-report=html  
- ```
- ![Texto alternativo](/img/coverage.png)
-
-
-# Insertar los registros a al db
- ```shell
-python manage.py shell < run.py
- ```
- Este escript es el encargado de carga la db con toda la informacion (https://nvd.nist.gov/developers/vulnerabilities).
-
- ![Texto alternativo](/img/django.png)
-
-
-
-# Documentacion 
-
-[documentacion de la endpoint](http://localhost:8000/redoc/)
- 
+Este proyecto está licenciado bajo los términos de la licencia MIT. Consulta el archivo `LICENSE` para más información.
+---

@@ -21,9 +21,6 @@ def fetch_and_save_vulnerabilities():
 
         description_en = next((desc['value'] for desc in descriptions if desc['lang'] == 'en'), '')
         description_es = next((desc['value'] for desc in descriptions if desc['lang'] == 'es'), '')
-
-        # Extraer datos con un manejo de excepciones
-        # print("baseSeverity",metrics.get('baseSeverity'))
         
         baseseveritys = cve.get('metrics', {}).get('cvssMetricV2', [])
          

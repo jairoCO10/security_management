@@ -5,13 +5,15 @@ from django.http import Http404
 from rest_framework.decorators import api_view
 from vulnerabilities.interface_adapters.controller.VulnerabilityControl import ControlVulnerability
 from vulnerabilities.serializers.serializers import VulnerabilityDataClassSerializer, CountVulnerabilityDataClassSerializer
-import logging
-from logging.handlers import TimedRotatingFileHandler
+
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi 
 from vulnerabilities.interface_adapters.dependencies import openapidoc
 from rest_framework import status
+
+import logging
+from logging.handlers import TimedRotatingFileHandler
 
 # Configuración del logger
 log_formatter = logging.Formatter('%(asctime)s [%(levelname)s] - %(message)s')

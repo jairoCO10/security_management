@@ -103,7 +103,7 @@ elif os.getenv("DEPLOY") == "PROD":
             "NAME": os.getenv("POSTGRES_DB"),  # El nombre de la base de datos
             "USER": os.getenv("POSTGRES_USER"),  # Tu usuario de base de datos
             "PASSWORD": os.getenv("POSTGRES_PASSWORD"),  # La contraseña del usuario
-            "HOST": "postgres",   # O la IP o nombre del contenedor de la base de datos
+            "HOST": os.getenv("HOST"),   # O la IP o nombre del contenedor de la base de datos
             "PORT": "5432",        # El puerto por el que PostgreSQL está escuchando
         }
     }

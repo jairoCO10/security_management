@@ -52,6 +52,7 @@ POSTGRES_PASSWORD=
 PGADMIN_DEFAULT_EMAIL=admin@example.com
 PGADMIN_DEFAULT_PASSWORD=
 PORTPG=5050:80
+HOST=
 
 SECRET_KEY =''
 
@@ -114,7 +115,7 @@ python manage.py runserver
    - **Descripción**: Devuelve el listado total de las vulnerabilidades.
    - **Ejemplo de Solicitud**:
      ```bash
-     curl -X GET http://localhost:8000/api/vulnerabilities/
+     curl -X GET http://localhost:8010/api/vulnerabilities/
      ```
 
 2. **Registrar Vulnerabilidades Corregidas**
@@ -124,7 +125,7 @@ python manage.py runserver
    - **Descripción**: Recibe las vulnerabilidades corregidas.
    - **Ejemplo de Solicitud**:
      ```bash
-     curl -X POST http://localhost:8000/api/fixeds/ -d '{"cve_id": "CVE-2000-0564"}'
+     curl -X POST http://localhost:8010/api/fixeds/ -d '{"cve_id": "CVE-2000-0564"}'
      ```
 
 3. **Listar Vulnerabilidades Excluyendo las Corregidas**
@@ -134,7 +135,7 @@ python manage.py runserver
    - **Descripción**: Devuelve el listado de vulnerabilidades excluyendo las corregidas.
    - **Ejemplo de Solicitud**:
      ```bash
-     curl -X GET http://localhost:8000/api/vulnerabilities/excluding-fixed/
+     curl -X GET http://localhost:8010/api/vulnerabilities/excluding-fixed/
      ```
 
 4. **Resumen de Vulnerabilidades por Severidad**
@@ -144,7 +145,7 @@ python manage.py runserver
    - **Descripción**: Devuelve un resumen de vulnerabilidades por severidad.
    - **Ejemplo de Solicitud**:
      ```bash
-     curl -X GET http://localhost:8000/api/vulnerabilities/summary/
+     curl -X GET http://localhost:8010/api/vulnerabilities/summary/
      ```
 
 ## Testing
@@ -212,6 +213,9 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "True"
+      PGADMIN_CONFIG_CHECK_FOR_NEWER_VERSIONS: "False"
+      PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: "10"
     ports:
       - ${PORTPG}
     depends_on:
